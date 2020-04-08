@@ -9,21 +9,23 @@ ggplot(runoff_stats_tidy, aes(x = sname, y = value, shape = "cyl", color = "cyl"
 ##----Question 2 ------
 runoff_stats$coefficient_of_variation <- runoff_stats$sd_day/runoff_stats$mean_day
 #mean is closer to minimum value, hence data is positively skewed,
-head(runoff_month)
-tail(runoff_month)
+runoff_stats$median <- runoff_day[,median(value), by = sname][,2]
+runoff_stats$skew <- 3*(runoff_stats$mean_day-runoff_stats$median)/runoff_stats$sd_day
 runoff_stats
-head(runoff_day)
-head(runoff_month)
+swek_and_coefficient_of_variation <- data.table(runoff_stats$skew, runoff_stats$coefficient_of_variation)
+colnames(swek_and_coefficient_of_variation) <- c("skewness", "coefficient of variation")
+swek_and_coefficient_of_variation
 #q3
 labs <- c("high", "medium", "low")
 levels(runoff_stats_class$class) <- rev(labs)
 levels(runoff_stats_class$runoff_class) <- rev(labs)
+runoff_stats_class
 ggplot(runoff_month, aes(x = factor(month), y = value,)) +
   geom_boxplot(fill = colset_4[4]) +
-  facet_wrap(~ sname, scales = 'free') + 
+  facet_wrap(~ sname, scales = 'free',) + 
   theme_bw()
 runoff_stats_class
-
+colset_4[4]
 head(runoff_day)
 ggplot(runoff_day, aes(x = date, y = value, group = sname)) +
   geom_boxplot(fill = colset_4[4]) +
