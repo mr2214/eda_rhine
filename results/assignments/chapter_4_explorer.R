@@ -1,6 +1,12 @@
 library(ggplot2)
 library(dplyr)
 library(plotly)
+runoff_day <- readRDS("./data/runoff_day.rds")
+runoff_month <- readRDS("./data/runoff_month.rds")
+runoff_summer <- readRDS("./data/runoff_summer.rds")
+runoff_winter <- readRDS("./data/runoff_winter.rds")
+runoff_year <- readRDS("./data/runoff_year.rds")
+
 # q1
 #there is no difference between the median and 0.5 quantile
 #q2
@@ -15,6 +21,7 @@ runoff_stats
 
 
 #----------q4------------------------------
+# with interactive plots, easy to locate min/max points, as well as there dates and values
 str(runoff_month)
 runoff_month <- runoff_month[value >= 0]  
 p <- runoff_month %>%
