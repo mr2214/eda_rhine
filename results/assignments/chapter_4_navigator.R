@@ -1,5 +1,8 @@
 library(ggplot2)
-runoff_stats
+list.files("data")
+runoff_stats <- readRDS("./data/runoff_stats.rds")
+runoff_month <- readRDS("./data/runoff_month.rds")
+runoff_stations <- readRDS("./data/runoff_stations_raw.rds")
 runoff_stats_tidy <- melt(runoff_stats, id.vars = 'sname')
 str(runoff_stats_tidy)
 runoff_stats_tidy
@@ -35,6 +38,13 @@ ggplot(runoff_day, aes(x = date, y = value, group = sname)) +
 #----q4----
 runoff_stations$mean_days <- runoff_stats_tidy$value[1:20]
 runoff_stations
+runoff_stations[, area_class := factor('small')]
+runoff_stations[area >= 10000 & area < 130000, area_class := factor('medium')]
+runoff_stations[area >= 130000, area_class := factor('large')]
+
+runoff_stations[, alt_class := factor('low')]
+runoff_stations[altitude >= 50 & altitude < 400, alt_class := factor('medium')]
+runoff_stations[altitude >= 400, alt_class := factor('high')]
 ggplot(runoff_stations, aes(x = mean_days, y = area)) + 
   geom_point(aes( size=alt_class, col = area_class)) +
   xlim(c(0, 3000)) + 
