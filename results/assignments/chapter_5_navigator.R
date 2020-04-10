@@ -74,14 +74,25 @@ runoff_summary <- readRDS(('data/runoff_summary.rds'))
 runoff_winter[, value_norm := scale(value), sname]
 runoff_summer[, value_norm := scale(value), sname]
 n_stations <- nrow(runoff_summary)
-ggplot(runoff_winter[1950 < year < 2010 ], aes(x = year, y = value_norm, col = sname)) +
+runoff_winter <- runoff_winter[1950 < year]
+runoff_winter <- runoff_winter[2010 > year]
+ggplot(runoff_winter[year > 1950], aes(x = year, y = value_norm, col = sname)) +
   geom_smooth(method = 'loess', formula = y~x, se = 0) + 
   scale_color_manual(values = colorRampPalette(colset_4)(n_stations)) +
   ggtitle('Winter runoff') +
   xlab(label = "Year") +
   ylab(label = "Runoff (m3/s)") +
   theme_bw()
-
+ggplot(runoff_winter[year > 1950], aes(x = year, y = value_norm, col = sname)) +
+  geom_smooth(method = 'lm', formula = y~x, se = 0) + 
+  scale_color_manual(values = colorRampPalette(colset_4)(n_stations)) +
+  ggtitle('Winter runoff') +
+  xlab(label = "Year") +
+  ylab(label = "Runoff (m3/s)") +
+  theme_bw()
+"""falling between 1995 and 2010"""
+runoff_summer <- runoff_summer[1950 < year]
+runoff_summer <- runoff_summer[2010 > year]
 ggplot(runoff_summer[year > 1950], aes(x = year, y = value_norm, col = sname)) +
   geom_smooth(method = 'loess', formula = y~x, se = 0) + 
   scale_color_manual(values = colorRampPalette(colset_4)(n_stations)) +
@@ -89,6 +100,15 @@ ggplot(runoff_summer[year > 1950], aes(x = year, y = value_norm, col = sname)) +
   xlab(label = "Year") +
   ylab(label = "Runoff (m3/s)") +
   theme_bw()
-
+runoff_summer <- runoff_summer[1950 < year]
+runoff_summer <- runoff_summer[2010 > year]
+ggplot(runoff_summer[year > 1950], aes(x = year, y = value_norm, col = sname)) +
+  geom_smooth(method = 'lm', formula = y~x, se = 0) + 
+  scale_color_manual(values = colorRampPalette(colset_4)(n_stations)) +
+  ggtitle('Summer runoff') +
+  xlab(label = "Year") +
+  ylab(label = "Runoff (m3/s)") +
+  theme_bw()
+#seems trend is decreasing
   
   
