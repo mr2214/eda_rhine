@@ -13,13 +13,20 @@ runoff_year_key[year < year_thres, period := factor('pre_2000')]
 runoff_year_key[year >= year_thres, period := factor('aft_2000')]
 runoff_month_key[year < year_thres, period := factor('pre_2000')]
 runoff_month_key[year >= year_thres, period := factor('aft_2000')]
-
-ggplot(runoff_year_key, aes(year, value, fill = period)) +
+runoff_month_key
+?ggplot
+ggplot(runoff_month_key, aes(factor(month), value, fill = period)) +
   geom_boxplot() +
   facet_wrap(~sname, scales = 'free_y') +
   scale_fill_manual(values = colset_4[c(4, 1)]) +
   xlab(label = "time period") +
   ylab(label = "Runoff (m3/s)") +
+  theme_bw()
+ggplot(runoff_month_key) +
+  geom_boxplot(aes(y=x,
+                   x=reorder(runoff_month_key$month),
+                   fill = period)) +
+  xlab('Month') + guides(fill=guide_legend(title="Year")) +
   theme_bw()
 ##little change in mean values pre 2000 and post 2000
 ggplot(runoff_month_key, aes(date, value, fill = period)) +
@@ -45,27 +52,34 @@ print(quantiles, nrow=200)
 ?quantile
 head(runoff_month)
 quantiles[selector,]
-selector <- sort(x = (c(seq(from = 2, to = 212, by = 11),seq(from = 10, to = 220, by = 11))), decreasing = FALSE)
-selector
-runoff_day$month <- format(as.Date(runoff_day$date), "%m")
-runoff_day
 
-x <- seq(as.POSIXct("2012-05-21"), by=("+1 hour"), length.out=5)
-x
-data.frame(
-  date=x,
-  time=format(x, "%H:%M")
-)
+runoff_day$month <- format(as.Date(runoff_day$date), "%m")
+runoff_day$year <- format(as.Date(runoff_day$date), "%Y")
+
+
 quantiles <- runoff_day[, q_10 := quantile(value, 0.1), by = .(sname, month)]
 quantiles <- runoff_day[, q_90 := quantile(value, 0.9), by = .(sname, month)]
-runoff_day$test <- inrange(x = runoff_day$value ,lower = runoff_day$q_10,upper = runoff_day$q_10)
-new_runoff_day <- runoff_day[test == TRUE]  
-new_runoff_day$year <- format(as.Date(new_runoff_day$date), "%Y")
+quantiles
+quantiles[year >= 1986, year_class := factor('post_1986')]
+quantiles[year < 1986, year_class := factor('pre_1986')]
+tenthq <- [quantiles[,(value<q_10), by = sname]]
+tenthq <- subset(x = quantiles, subset = value < q_10)
+nine_tenth_q <- subset(x = quantiles, subset = value > q_90)
 ?.N
-head(new_runoff_day)
-total <- new_runoff_day[, .N, by = list(sname, month, year)]
-ggplot(total, aes(year, N ,colour = sname)) + 
-  geom_point()
+tenthq
+number_10_days <- tenthq[, .N, by = list(sname,year_class,month,year)]
+number_90_days <- nine_tenth_q[, .N, by = list(sname,year_class,month,year)]
+number_10_days[(month >= 7) & (month <= 9), season := factor('summer')]
+number_10_days[(month >= 1) & (month <= 3), season := factor('winter')]
+
+ggplot(number_10_days, aes(factor(season), N, fill = year_class)) +
+  geom_boxplot() +
+  facet_wrap(~sname, scales = 'free_y') +
+  scale_fill_manual(values = colset_4[c(4, 1)]) +
+  xlab(label = "time period") +
+  ylab(label = "Runoff (m3/s)") +
+  theme_bw()
+
 # density of points increasing with time
 #q3---------------------------------------------------------------------------------
 runoff_winter <- readRDS('data/runoff_winter.rds')
