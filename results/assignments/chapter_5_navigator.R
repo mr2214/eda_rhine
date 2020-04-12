@@ -22,14 +22,8 @@ ggplot(runoff_month_key, aes(factor(month), value, fill = period)) +
   xlab(label = "time period") +
   ylab(label = "Runoff (m3/s)") +
   theme_bw()
-ggplot(runoff_month_key) +
-  geom_boxplot(aes(y=x,
-                   x=reorder(runoff_month_key$month),
-                   fill = period)) +
-  xlab('Month') + guides(fill=guide_legend(title="Year")) +
-  theme_bw()
 ##little change in mean values pre 2000 and post 2000
-ggplot(runoff_month_key, aes(date, value, fill = period)) +
+ggplot(runoff_month_key, aes(period, value, fill = period)) +
   geom_boxplot() +
   facet_wrap(~sname, scales = 'free_y') +
   scale_fill_manual(values = colset_4[c(4, 1)]) +
@@ -39,47 +33,46 @@ ggplot(runoff_month_key, aes(date, value, fill = period)) +
 ##small increase in mean values
 #q2---------------------------------------------
 runoff_day <- readRDS("./data/runoff_day_raw.rds")
-str(runoff_day)
-head(runoff_day)
-tail(runoff_day)
-?.N
 runoff_day <- runoff_day[value>0]
-head(runoff_day)
-quantiles <- runoff_day[,quantile(value, probs = seq(0, 1, 1/10)), by=list(sname,month)]
-quantiles_2 <- runoff_day[,quantile(value, probs = seq(0, 1, 1/10)), by = month]
-
-print(quantiles, nrow=200)
-?quantile
-head(runoff_month)
-quantiles[selector,]
-
-runoff_day$month <- format(as.Date(runoff_day$date), "%m")
-runoff_day$year <- format(as.Date(runoff_day$date), "%Y")
-
-
-quantiles <- runoff_day[, q_10 := quantile(value, 0.1), by = .(sname, month)]
-quantiles <- runoff_day[, q_90 := quantile(value, 0.9), by = .(sname, month)]
-quantiles
-quantiles[year >= 1986, year_class := factor('post_1986')]
-quantiles[year < 1986, year_class := factor('pre_1986')]
-tenthq <- [quantiles[,(value<q_10), by = sname]]
+doma <- subset(x = runoff_day, sname == "DOMA")
+basr <- subset(x = runoff_day, sname == "BASR")
+koel <- subset(x = runoff_day, sname == "KOEL")
+three_sations <- rbind(doma,basr,koel)
+three_sations$month <- format(as.Date(three_sations$date), "%m")
+three_sations$year <- format(as.Date(three_sations$date), "%Y")
+quantiles <- three_sations[, q_10 := quantile(value, 0.1), by = .(sname, month)]
+quantiles <- three_sations[, q_90 := quantile(value, 0.9), by = .(sname, month)]
+three_sations
 tenthq <- subset(x = quantiles, subset = value < q_10)
 nine_tenth_q <- subset(x = quantiles, subset = value > q_90)
-?.N
+mean_low <- tenthq[,mean(value), by = .(sname, month)]
+mean_high <- nine_tenth_q[,mean(value), by = .(sname, month)]
+ggplot(data = mean_low, aes(x = month, y = V1)) +
+  geom_point() +
+  facet_wrap(~sname, scales = 'free_y') 
+ggplot(data = mean_high, aes(x = month, y = V1)) +
+  geom_point() +
+  facet_wrap(~sname, scales = 'free_y')
 tenthq
 number_10_days <- tenthq[, .N, by = list(sname,year_class,month,year)]
+number_10_days_summer <- subset(x = number_10_days, subset = (as.numeric(number_10_days$month) >=7 &
+                                                                (as.numeric(number_10_days$month) <= 9)))
+number_10_days_winter <- subset(x = number_10_days, subset = (as.numeric(number_10_days$month) >=1 &
+                                                                (as.numeric(number_10_days$month) <= 3)))
 number_90_days <- nine_tenth_q[, .N, by = list(sname,year_class,month,year)]
-number_10_days[(month >= 7) & (month <= 9), season := factor('summer')]
-number_10_days[(month >= 1) & (month <= 3), season := factor('winter')]
-
-ggplot(number_10_days, aes(factor(season), N, fill = year_class)) +
-  geom_boxplot() +
-  facet_wrap(~sname, scales = 'free_y') +
-  scale_fill_manual(values = colset_4[c(4, 1)]) +
-  xlab(label = "time period") +
-  ylab(label = "Runoff (m3/s)") +
-  theme_bw()
-
+number_90_days_summer <- subset(x = number_90_days, subset = (as.numeric(number_90_days$month) >=7 &
+                                                                (as.numeric(number_90_days$month) <= 9)))
+number_90_days_winter <- subset(x = number_90_days, subset = (as.numeric(number_90_days$month) >=1 &
+                                                                (as.numeric(number_90_days$month) <= 3)))
+number_10_days_summer
+ggplot(data = number_10_days_summer, aes(x = sname, y = N, fill = year_class)) +
+  geom_boxplot()
+ggplot(data = number_10_days_winter, aes(x = sname, y = N, fill = year_class)) +
+  geom_boxplot()
+ggplot(data = number_90_days_summer, aes(x = sname, y = N, fill = year_class)) +
+  geom_boxplot()
+ggplot(data = number_90_days_winter, aes(x = sname, y = N, fill = year_class)) +
+  geom_boxplot()
 # density of points increasing with time
 #q3---------------------------------------------------------------------------------
 runoff_winter <- readRDS('data/runoff_winter.rds')

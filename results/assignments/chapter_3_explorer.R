@@ -5,6 +5,10 @@
 runnoff in m^3/s
 """
 #question 2
+runoff_day <- readRDS('./data/runoff_day_raw.rds')
+head(runoff_day)
+runoff_day[, mean(value)]
+head(runoff_day)
 runoff_stations
 average_catchment_area <- sum(runoff_stations$area)/20   #km^2
 seperated_values <- split(x = runoff_day_raw$value, f = levels(runoff_day_raw$sname))
