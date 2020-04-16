@@ -15,15 +15,16 @@ runoff_day[,median(value)]
 runoff_day[,median(value), by = sname]
 
 #diffence in values due to positive skew, the data has a long tail, very large max values
-runoff_stats
+
 #q3, 
 #rees and lobith both have very large areas and are very low lying, they are very close together, due to the fact #a human border runs between them (germany/netherlands)
 
 
 #----------q4------------------------------
 # with interactive plots, easy to locate min/max points, as well as there dates and values
-str(runoff_month)
-runoff_month <- runoff_month[value >= 0]  
+runoff_month <- runoff_month[value >= 0]
+runoff_month[1:3654,3] <- "REES"
+runoff_month <- runoff_month[sname != "<NA>"]
 p <- runoff_month %>%
   ggplot( aes(x = date, y = value)) +
   geom_area(fill="#69b3a2", alpha=0.5) +

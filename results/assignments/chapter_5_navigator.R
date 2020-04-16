@@ -8,13 +8,11 @@ theme_set(theme_bw())
 year_thres <- 2000
 runoff_year_key <- runoff_year_key[value >= 0]  
 runoff_month_key <- runoff_month_key[value >= 0]  
-head(runoff_month_key)
 runoff_year_key[year < year_thres, period := factor('pre_2000')]
 runoff_year_key[year >= year_thres, period := factor('aft_2000')]
 runoff_month_key[year < year_thres, period := factor('pre_2000')]
 runoff_month_key[year >= year_thres, period := factor('aft_2000')]
-runoff_month_key
-?ggplot
+
 ggplot(runoff_month_key, aes(factor(month), value, fill = period)) +
   geom_boxplot() +
   facet_wrap(~sname, scales = 'free_y') +
@@ -42,7 +40,7 @@ three_sations$month <- format(as.Date(three_sations$date), "%m")
 three_sations$year <- format(as.Date(three_sations$date), "%Y")
 quantiles <- three_sations[, q_10 := quantile(value, 0.1), by = .(sname, month)]
 quantiles <- three_sations[, q_90 := quantile(value, 0.9), by = .(sname, month)]
-three_sations
+
 tenthq <- subset(x = quantiles, subset = value < q_10)
 nine_tenth_q <- subset(x = quantiles, subset = value > q_90)
 mean_low <- tenthq[,mean(value), by = .(sname, month)]
@@ -97,7 +95,7 @@ ggplot(runoff_winter[year > 1950], aes(x = year, y = value_norm, col = sname)) +
   xlab(label = "Year") +
   ylab(label = "Runoff (m3/s)") +
   theme_bw()
-"""falling between 1995 and 2010"""
+"falling between 1995 and 2010"
 runoff_summer <- runoff_summer[1950 < year]
 runoff_summer <- runoff_summer[2010 > year]
 ggplot(runoff_summer[year > 1950], aes(x = year, y = value_norm, col = sname)) +

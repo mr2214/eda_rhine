@@ -3,24 +3,19 @@ library(data.table)
 library(ggplot2)
 library(plotly)
 
-runoff_summary
 #doma is at a high altitude, hence high vaiability due to snow melt, and snow accumilation during winter months,
 #q2-------------------------------------------
 precipitaion_rhine_day <- readRDS('data/precip_day.rds')
-head(precipitaion_rhine_day)
 precipitaion_rhine_day$month <- format(as.Date(precipitaion_rhine_day$date), "%m")
 precipitaion_rhine_day$year <- format(as.Date(precipitaion_rhine_day$date), "%Y")
 
-head(precipitaion_rhine_day)
-tail(precipitaion_rhine_day)
-2018-1765
 precipitaion_rhine_day[year < 1815, period := factor('1765-1815')]
 precipitaion_rhine_day[(1815 <= year) & (year < 1865), period := factor('1815-1865')]
 precipitaion_rhine_day[(1865 <= year) & (year < 1915), period := factor('1865-1915')]
 precipitaion_rhine_day[(1915 <= year) & (year < 1965), period := factor('1915-1865')]
 precipitaion_rhine_day[(1965 <= year) & (year < 2020), period := factor('1965-2020')]
-precipitaion_rhine_day$
-colset_4
+
+
 ggplot(precipitaion_rhine_day, aes(period, value, fill = period)) +
   geom_boxplot() +
   facet_wrap(~month, scales = 'free_y') +
@@ -28,7 +23,7 @@ ggplot(precipitaion_rhine_day, aes(period, value, fill = period)) +
   xlab(label = "period") +
   ylab(label = "precipitation (m3/s)") +
   theme_bw()
-precipitaion_rhine_day
+
 
 
 new_precipation_rhine <- precipitaion_rhine_day[, mean(value), by = list(year)]
@@ -38,8 +33,7 @@ new_precipitaion_rhine_month[(1815 <= year) & (year < 1865), period := factor('1
 new_precipitaion_rhine_month[(1865 <= year) & (year < 1915), period := factor('1865-1915')]
 new_precipitaion_rhine_month[(1915 <= year) & (year < 1965), period := factor('1915-1865')]
 new_precipitaion_rhine_month[(1965 <= year) & (year < 2020), period := factor('1965-2020')]
-head(new_precipitaion_rhine_month)
-tail(new_precipitaion_rhine_month)
+
 ggplot(new_precipitaion_rhine_month, aes(year, V1, fill = period)) +
     geom_point() +
     geom_smooth() +
