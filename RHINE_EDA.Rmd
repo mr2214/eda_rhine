@@ -125,3 +125,5 @@ ggplot(runoff_month_key, aes(period, value, fill = period)) +
 
 ## Futher possible investigations
 human inpacts on the river rhine have been extensive, from building of dams to use of water in waste treatment and agriculture, these influnces will ve impacts on river runoff at different locations, hence identifing were and when dams and agriculutral impacts will be important indetermining the run off as a function of time and displacement. Other major rivers in europe such as the elbe could also be analysed to see if it follows similar patterns as the rhine.
+
+https://rpubs.com/mr2214/600582
