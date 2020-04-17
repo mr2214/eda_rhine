@@ -1,5 +1,5 @@
 ---
-title: "EDA_Rhine_RIver"
+title: "EDA_Rhine_River"
 author: "mroe1"
 date: "16/04/2020"
 output: 
@@ -31,7 +31,7 @@ getwd()
 # Exploratory data analysis
 
 In my exploratory data analysis of the river Rhine, I produced tables and graphs on various data sets of discharge at different stations along the course of the river Rhine.
-The anaysis hypothesis, suggests falling summer discharge and increasesing winter dischagre, due to climate change and it knock on effects on snow depths in mountains regions and incresed evapotranspiration during summer months.
+The anaysis hypothesis, suggests falling summer discharge and increasesing winter discharge, due to climate change and it knock on effects on snow depths in mountains regions and incresed evapotranspiration during summer months.
 
 ## Summary of statistical values 
 brocken down by various months and various stations along the river, it is clear were data is missing due to -999 value
@@ -65,7 +65,7 @@ ggplot(runoff_stats_tidy, aes(x = sname, y = value, shape = "cyl", color = "cyl"
 
 ## Each station date over whole period
 To show and identify points in time when maximum points and minimum points were reached in the stations run off 
-data, I created interactive plots of each station, it is also easty to see if there is correlation between station or not
+data, I created interactive plots of each station, it is also easy to see if there is correlation between station or not. It can also be seen were data is missing.
 
 ```{r, echo = FALSE, fig.width = 25, fig.height = 6}
 
@@ -124,4 +124,4 @@ ggplot(runoff_month_key, aes(period, value, fill = period)) +
 ```
 
 ## Futher possible investigations
-human inpacts on the river rhine have been extensive, from building of dams to use of water in waste treatment and agriculture, these influnces will ahve impacts on river runoff at different locations, hence identifing were and when dams and agriculutral impacts will be important indetermining the runn off as a function of time and displacement. Other major rivers in europe such as elbe could also be analysed to see if it follows similar patterns as the rhine.
+human inpacts on the river rhine have been extensive, from building of dams to use of water in waste treatment and agriculture, these influnces will ve impacts on river runoff at different locations, hence identifing were and when dams and agriculutral impacts will be important indetermining the run off as a function of time and displacement. Other major rivers in europe such as the elbe could also be analysed to see if it follows similar patterns as the rhine.
